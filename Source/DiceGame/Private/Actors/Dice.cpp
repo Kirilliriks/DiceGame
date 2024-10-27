@@ -15,9 +15,15 @@ int ADice::GetDownSideNumber()
 		return 0;
 	}
 
-	const int UpSide = FMath::RoundToInt(Mesh->GetUpVector().Z);
-	const int ForwardSide = FMath::RoundToInt(Mesh->GetForwardVector().Z);
-	const int RightSide = FMath::RoundToInt(Mesh->GetRightVector().Z);
+	// Faster than Dot Product I Guess
+	// const int UpSide = FMath::RoundToInt(Mesh->GetUpVector().Z);
+	// const int ForwardSide = FMath::RoundToInt(Mesh->GetForwardVector().Z);
+	// const int RightSide = FMath::RoundToInt(Mesh->GetRightVector().Z);
+
+	const FVector UpVector = FVector::UpVector;
+	const float UpSide = Mesh->GetUpVector().Dot(UpVector);
+	const float ForwardSide = Mesh->GetForwardVector().Dot(UpVector);
+	const float RightSide = Mesh->GetRightVector().Dot(UpVector);
 
 	if (UpSide == 1)
 	{
