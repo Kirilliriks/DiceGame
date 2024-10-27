@@ -13,6 +13,8 @@ class ASingleDiceGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
+	ASingleDiceGameMode();
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<ADice> DiceBlueprint;
@@ -21,7 +23,12 @@ protected:
 	int DiceAmount = 1;
 
 private:
+
+	TArray<TObjectPtr<ADice>> Dices;
+
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
+	virtual void Tick(float DeltaSeconds) override;
+	
 	void SpawnDices(UWorld* World);
 	void SpawnDice(UWorld* World, const FVector& Location);
 };

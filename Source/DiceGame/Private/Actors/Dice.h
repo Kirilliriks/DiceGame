@@ -12,9 +12,16 @@ class ADice : public AActor
 public:	
 	ADice();
 
+	int GetDownSideNumber();
+
 protected:
+
+	TObjectPtr<UStaticMeshComponent> Mesh;
+
 	virtual void BeginPlay() override;
 
 public:	
 	virtual void Tick(const float DeltaTime) override;
+
+	void RandomThrow();
 };
