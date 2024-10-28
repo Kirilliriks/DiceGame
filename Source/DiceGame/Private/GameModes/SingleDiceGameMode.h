@@ -25,10 +25,11 @@ protected:
 private:
 
 	TArray<TObjectPtr<ADice>> Dices;
+	int Amount;
 
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
 	virtual void Tick(float DeltaSeconds) override;
-	
+
 	void SpawnDices(UWorld* World);
 	void SpawnDice(UWorld* World, const FVector& Location);
 };

@@ -8,7 +8,7 @@ ADice::ADice()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-int ADice::GetDownSideNumber()
+int ADice::GetUpSideNumber()
 {
 	if (!Mesh->GetComponentVelocity().IsZero())
 	{
@@ -21,6 +21,7 @@ int ADice::GetDownSideNumber()
 	// const int RightSide = FMath::RoundToInt(Mesh->GetRightVector().Z);
 
 	const FVector UpVector = FVector::UpVector;
+
 	const float UpSide = Mesh->GetUpVector().Dot(UpVector);
 	const float ForwardSide = Mesh->GetForwardVector().Dot(UpVector);
 	const float RightSide = Mesh->GetRightVector().Dot(UpVector);

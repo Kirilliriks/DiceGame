@@ -1,5 +1,7 @@
 #include "GameModes/SingleDiceGameMode.h"
+
 #include "Actors/Dice.h"
+#include "UI/DiceHUD.h"
 
 ASingleDiceGameMode::ASingleDiceGameMode()
 {
@@ -34,15 +36,23 @@ void ASingleDiceGameMode::Tick(const float DeltaSeconds)
 			continue;
 		}
 
-		const int DownSideNumber = Dice->GetDownSideNumber();
-		UE_LOG(LogTemp, Warning, TEXT("Side %d"), DownSideNumber);
-		
+		const int DownSideNumber = Dice->GetUpSideNumber();
 		if (DownSideNumber <= 0)
 		{
 			continue;
 		}
 
+		Amount += DownSideNumber;
 		It.RemoveCurrent();
+	}
+
+	if (Dices.IsEmpty())
+	{
+		ADiceHUD* HUD = Cast<ADiceHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+		FString Str = FString("Dice sum is ");
+		Str.Append(FString::FromInt(Amount));
+
+		HUD->SetText(FText::FromString(Str));
 	}
 }
 
@@ -53,14 +63,27 @@ void ASingleDiceGameMode::SpawnDices(UWorld* World)
 		UE_LOG(LogTemp, Error, TEXT("Dice Blueprint in SingleDiceGameMode is Invalid"));
 		return;
 	}
-	
+
 	const AActor* Player = World->GetFirstPlayerController();
 	FVector PlayerLocation = Player->GetActorLocation();
 	PlayerLocation += Player->GetActorForwardVector() * 200;
 
+	int Delay = 1;
 	for (int i = 0; i < DiceAmount; i++)
 	{
-		SpawnDice(World, PlayerLocation);
+		FTimerHandle UnusedHandle;
+		FTimerDelegate TimerDelegate;
+
+		TimerDelegate.BindWeakLambda
+		(
+			this, [this, World, PlayerLocation]
+			{
+				SpawnDice(World, PlayerLocation);
+			}
+		);
+
+		GetWorldTimerManager().SetTimer(UnusedHandle, TimerDelegate, Delay, false);
+		Delay += 1;
 	}
 }
 

@@ -12,7 +12,7 @@ class ADice : public AActor
 public:	
 	ADice();
 
-	int GetDownSideNumber();
+	int GetUpSideNumber();
 
 protected:
 
