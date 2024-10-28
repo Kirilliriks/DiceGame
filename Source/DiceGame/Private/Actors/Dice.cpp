@@ -15,16 +15,14 @@ int ADice::GetUpSideNumber()
 		return 0;
 	}
 
-	// Faster than Dot Product I Guess
+	// Faster than Dot Product I Guess, if plane normal is (0, 0, 1)
 	// const int UpSide = FMath::RoundToInt(Mesh->GetUpVector().Z);
 	// const int ForwardSide = FMath::RoundToInt(Mesh->GetForwardVector().Z);
 	// const int RightSide = FMath::RoundToInt(Mesh->GetRightVector().Z);
 
-	const FVector UpVector = FVector::UpVector;
-
-	const float UpSide = Mesh->GetUpVector().Dot(UpVector);
-	const float ForwardSide = Mesh->GetForwardVector().Dot(UpVector);
-	const float RightSide = Mesh->GetRightVector().Dot(UpVector);
+	const int UpSide = FMath::RoundToInt(Mesh->GetUpVector().Dot(PlaneNormal));
+	const int ForwardSide = FMath::RoundToInt(Mesh->GetForwardVector().Dot(PlaneNormal));
+	const int RightSide = FMath::RoundToInt(Mesh->GetRightVector().Dot(PlaneNormal));
 
 	if (UpSide == 1)
 	{
@@ -45,7 +43,7 @@ int ADice::GetUpSideNumber()
 	{
 		return 5;
 	}
-	
+
 	if (RightSide == 1)
 	{
 		return 6;
@@ -63,6 +61,8 @@ void ADice::BeginPlay()
 {
 	Super::BeginPlay();
 	Mesh = FindComponentByClass<UStaticMeshComponent>();
+
+	OnActorHit.AddDynamic(this, &ADice::OnMyActorHit);
 }
 
 void ADice::Tick(const float DeltaTime)
@@ -85,4 +85,9 @@ void ADice::RandomThrow()
 
 	const FVector Angular = FRandomVectorUtil::GetRandomVector(-1, 1);
 	Mesh->AddAngularImpulseInDegrees(Angular * FMath::FRandRange(50.0, 500.0), NAME_None, true);
+}
+
+void ADice::OnMyActorHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit)
+{
+	PlaneNormal = Hit.Normal;
 }

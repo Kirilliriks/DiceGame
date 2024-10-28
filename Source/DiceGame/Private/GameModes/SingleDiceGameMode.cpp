@@ -65,8 +65,7 @@ void ASingleDiceGameMode::SpawnDices(UWorld* World)
 	}
 
 	const AActor* Player = World->GetFirstPlayerController();
-	FVector PlayerLocation = Player->GetActorLocation();
-	PlayerLocation += Player->GetActorForwardVector() * 200;
+	const FVector PlayerLocation = Player->GetActorLocation() + Player->GetActorForwardVector() * 200;
 
 	int Delay = 1;
 	for (int i = 0; i < DiceAmount; i++)

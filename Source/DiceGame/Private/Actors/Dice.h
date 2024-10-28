@@ -9,19 +9,26 @@ class ADice : public AActor
 {
 	GENERATED_BODY()
 
-public:	
+public:
+
 	ADice();
 
 	int GetUpSideNumber();
 
 protected:
-
 	TObjectPtr<UStaticMeshComponent> Mesh;
 
 	virtual void BeginPlay() override;
 
-public:	
+public:
+
 	virtual void Tick(const float DeltaTime) override;
 
 	void RandomThrow();
+
+	UFUNCTION()
+	void OnMyActorHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);
+
+private:
+	FVector PlaneNormal;
 };
